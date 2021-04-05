@@ -1,0 +1,10 @@
+23:01:07 **** Incremental Build of configuration Debug for project First_RTOS_Workspace ****
+make -j8 all 
+arm-none-eabi-size   First_RTOS_Workspace.elf 
+   text	   data	    bss	    dec	    hex	filename
+   6176	     20	   1572	   7768	   1e58	First_RTOS_Workspace.elf
+Finished building: default.size.stdout
+ 
+
+23:01:07 Build Finished. 0 errors, 0 warnings. (took 240ms)
+

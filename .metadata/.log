@@ -19,3 +19,90 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64
 
 !ENTRY org.eclipse.cdt.core 1 0 2021-04-01 23:30:29.124
 !MESSAGE Indexed 'First_RTOS_Workspace' (22 sources, 81 headers) in 4.71 sec: 4,828 declarations; 24,896 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0067%)
+!SESSION 2021-04-02 00:21:38.206 -----------------------------------------------
+eclipse.buildId=Version 1.5.1
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-02 00:21:57.962
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-02 00:21:58.022
+!MESSAGE Log4j initialized with config file /home/nakul/Desktop/Workspace/RTOS_WORKSPACE/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-02 00:22:02.623
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-02 00:22:02.655
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2021-04-02 00:57:03.482 -----------------------------------------------
+eclipse.buildId=Version 1.5.1
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -data /home/nakul/Desktop/Workspace/RTOS_WORKSPACE -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-02 00:57:08.429
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-02 00:57:08.483
+!MESSAGE Log4j initialized with config file /home/nakul/Desktop/Workspace/RTOS_WORKSPACE/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-02 00:57:13.252
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-02 00:57:13.449
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+!SESSION 2021-04-05 22:38:30.223 -----------------------------------------------
+eclipse.buildId=Version 1.5.1
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-05 22:38:50.348
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-05 22:38:50.416
+!MESSAGE Log4j initialized with config file /home/nakul/Desktop/Workspace/RTOS_WORKSPACE/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-05 22:38:56.103
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-05 22:38:56.203
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+!SESSION 2021-04-05 22:41:50.925 -----------------------------------------------
+eclipse.buildId=Version 1.5.1
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -data /home/nakul/Desktop/Workspace/RTOS_WORKSPACE -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-05 22:41:56.363
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-05 22:41:56.419
+!MESSAGE Log4j initialized with config file /home/nakul/Desktop/Workspace/RTOS_WORKSPACE/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-05 22:42:01.698
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-05 22:42:01.938
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-05 22:43:50.290
+!MESSAGE Indexed 'First_Project_' (22 sources, 81 headers) in 4.94 sec: 4,828 declarations; 24,896 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0067%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-05 23:40:56.403
+!MESSAGE Indexed 'First_RTOS_Project_' (21 sources, 80 headers) in 3.02 sec: 4,484 declarations; 21,609 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0077%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-05 23:46:10.102
+!MESSAGE Indexed 'First_RTOS_Project_' (21 sources, 80 headers) in 1.58 sec: 4,484 declarations; 21,609 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0077%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-05 23:49:10.200
+!MESSAGE Indexed 'First_RTOS_Project_' (20 sources, 80 headers) in 1.64 sec: 4,475 declarations; 21,581 references; 0 unresolved inclusions; 1 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-05 23:57:09.959
+!MESSAGE Indexed 'First_RTOS_Project_' (20 sources, 80 headers) in 1.28 sec: 4,475 declarations; 21,581 references; 0 unresolved inclusions; 1 syntax errors; 0 unresolved names (0%)
