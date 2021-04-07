@@ -72,6 +72,8 @@ void Error_Handler(void);
 #define SWO_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
+void USART_Send(uint8_t * data, uint8_t size);
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
