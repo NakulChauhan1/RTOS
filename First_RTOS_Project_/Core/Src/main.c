@@ -99,18 +99,22 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-while(1)
-  {    if (HAL_UART_Transmit(USART2, "nakul\n", 6, 100) != HAL_OK)
+  /*uint8_t data[] = "nakul\n";
+  uint8_t size = sizeof(data);
+
+  while(1)
+  {    
+      if(HAL_UART_Transmit(&huart2, data, size, 100) != HAL_OK)
       {
         Error_Handler();
       }
       HAL_Delay(1000);
-  }
+  }*/
 
-  ret = xTaskCreate(task1_handler, "TASK1", 200, "Task-1 running", 2, &task1_handler_address);
+  ret = xTaskCreate(task1_handler, "TASK1", 200, "Task-1 running\n", 2, &task1_handler_address);
   configASSERT(ret == pdPASS);  
 
-  ret = xTaskCreate(task2_handler, "TASK2", 200, "Task-2 running", 2, &task2_handler_address);
+  ret = xTaskCreate(task2_handler, "TASK2", 200, "Task-2 running\n", 2, &task2_handler_address);
   configASSERT(ret == pdPASS);
 
   //Start the Schedular
@@ -156,8 +160,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLN = 200;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV8;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -173,7 +177,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -231,19 +235,17 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_2;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pin = B1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD2_Pin */
-  GPIO_InitStruct.Pin = USART_RX_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pin = LD2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART2; 
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
 }
 
@@ -251,12 +253,15 @@ static void MX_GPIO_Init(void)
 
 static void task1_handler(void * parameter)
 {
+
     while(1)
     {
-      if (HAL_UART_Transmit(USART2, parameter, 15, 100) != HAL_OK)
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 16, 100) != HAL_OK)
       {
         Error_Handler();
       }
+      HAL_Delay(100);
     }
 }
 
@@ -264,10 +269,20 @@ static void task2_handler(void * parameter)
 {
     while(1)
     {
-      if (HAL_UART_Transmit(USART2, parameter, 15, 100) != HAL_OK)
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 16, 100) != HAL_OK)
       {
         Error_Handler();
       }
+      HAL_Delay(100);
+    }
+}
+
+void USART_Send(uint8_t * data, uint8_t size)
+{
+    if(HAL_UART_Transmit(&huart2, data, size, 100))
+    {
+      Error_Handler();
     }
 }
 
