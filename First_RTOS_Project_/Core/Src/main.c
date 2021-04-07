@@ -262,6 +262,7 @@ static void task1_handler(void * parameter)
         Error_Handler();
       }
       HAL_Delay(100);
+      //taskYIELD();
     }
 }
 
@@ -275,6 +276,7 @@ static void task2_handler(void * parameter)
         Error_Handler();
       }
       HAL_Delay(100);
+      //taskYIELD();
     }
 }
 
