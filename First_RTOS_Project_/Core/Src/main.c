@@ -34,6 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define DWT_CTRL    (*(volatile uint32_t*)0xE0001000)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -98,6 +99,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  //Enable the CYCCNT counter.
+  DWT_CTRL |= ( 1 << 0);
 
   /*uint8_t data[] = "nakul\n";
   uint8_t size = sizeof(data);
