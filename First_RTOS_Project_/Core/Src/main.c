@@ -101,7 +101,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   //Enable the CYCCNT counter.
-  DWT_CTRL |= ( 1 << 0);
+  //DWT_CTRL |= ( 1 << 0);
+
+  //SEGGER_SYSVIEW_Conf();
+
+  //SEGGER_SYSVIEW_Start();
 
   /*uint8_t data[] = "nakul\n";
   uint8_t size = sizeof(data);
@@ -115,7 +119,7 @@ int main(void)
       HAL_Delay(1000);
   }*/
 
-  ret = xTaskCreate(task1_handler, "TASK1", 200, "Task-1 running\n", 2, &task1_handler_address);
+  ret = xTaskCreate(task1_handler, "TASK1", 200, "Task-1 running\n", 3, &task1_handler_address);
   configASSERT(ret == pdPASS);  
 
   ret = xTaskCreate(task2_handler, "TASK2", 200, "Task-2 running\n", 2, &task2_handler_address);
@@ -266,7 +270,8 @@ static void task1_handler(void * parameter)
         Error_Handler();
       }
       HAL_Delay(100);
-      taskYIELD(); 
+      vTaskDelay(pdMS_TO_TICKS(2000));
+      //taskYIELD(); 
     }
 }
 
@@ -280,7 +285,8 @@ static void task2_handler(void * parameter)
         Error_Handler();
       }
       HAL_Delay(100);
-      taskYIELD();
+      vTaskDelay(pdMS_TO_TICKS(1000));
+      //taskYIELD();
     }
 }
 
