@@ -267,3 +267,32 @@ java.io.FileNotFoundException: /home/nakul/Desktop/Workspace/RTOS_WORKSPACE/Firs
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-07 00:02:38.938
 !MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2021-04-19 18:52:41.198 -----------------------------------------------
+eclipse.buildId=Version 1.5.1
+java.version=1.8.0_272
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.core.resources 2 10035 2021-04-19 18:53:00.865
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2021-04-19 18:53:04.928
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2021-04-19 18:53:04.999
+!MESSAGE Log4j initialized with config file /home/nakul/Desktop/Workspace/RTOS_WORKSPACE/.metadata/.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 4 4 2021-04-19 18:53:09.961
+!MESSAGE com.st.stm32cube.ide.mcu.ide/META-INF/version/build_ref file not found, build reference will not be reported into properties
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2021-04-19 18:53:10.698
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-19 19:01:54.247
+!MESSAGE Indexed 'Button_and_LED' (22 sources, 81 headers) in 3.72 sec: 4,828 declarations; 24,896 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0067%)
+
+!ENTRY org.eclipse.core.resources 2 2 2021-04-19 19:06:24.518
+!MESSAGE Save operation warnings.
+!SUBENTRY 1 org.eclipse.core.resources 2 234 2021-04-19 19:06:24.518
+!MESSAGE The project description file (.project) for 'First_RTOS_Workspace' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
