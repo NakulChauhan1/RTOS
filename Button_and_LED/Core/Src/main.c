@@ -23,6 +23,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "stdint.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +49,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+static uint8_t button_pressed;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -51,6 +58,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
+static void button_task_handler(void *);
+static void led_task_handler(void *);
 
 /* USER CODE END PFP */
 
@@ -66,6 +75,10 @@ static void MX_USART2_UART_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  
+  TaskHandle_t task1_handler_address;
+  TaskHandle_t task2_handler_address;
+  BaseType_t ret;
 
   /* USER CODE END 1 */
 
@@ -88,7 +101,22 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  
   /* USER CODE BEGIN 2 */
+
+  ret = xTaskCreate(button_task_handler, "BUTTON TASK", 200, "BUTTON TASK running\n\n", 2, &task1_handler_address);
+  configASSERT(ret == pdPASS);  
+
+  ret = xTaskCreate(led_task_handler, "LED TASK", 200, "LED TASK running\n\n", 2, &task2_handler_address);
+  configASSERT(ret == pdPASS);
+
+  //Start the Schedular
+  vTaskStartScheduler();
+
+
+  //Note: Control never comes out of this function ie Schedular untill unless schedular launch is failed
+
+  
 
   /* USER CODE END 2 */
 
@@ -215,7 +243,74 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+static void button_task_handler(void * parameter)
+{
+
+    while(1)
+    {
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      HAL_Delay(1000);
+
+      //BY DEFAULT BUTTON PIN IS CONNECTED TO HIGH
+      while(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin));
+      button_pressed = 1; 
+    }
+}
+
+static void led_task_handler(void * parameter)
+{
+    while(1)
+    {
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 19, 100) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      HAL_Delay(1000);
+
+      if (button_pressed)
+      {
+        button_pressed = 0;
+        HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      }  
+    }
+}
+
+
+void USART_Send(uint8_t * data, uint8_t size)
+{
+    if(HAL_UART_Transmit(&huart2, data, size, 100))
+    {
+      Error_Handler();
+    }
+}
+
 /* USER CODE END 4 */
+
+ /**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM6 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM6) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.
