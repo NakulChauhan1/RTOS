@@ -52,6 +52,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void USART_Send(uint8_t * data, uint8_t size);
 
 /* USER CODE BEGIN EFP */
 

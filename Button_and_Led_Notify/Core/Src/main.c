@@ -1,5 +1,8 @@
 /* Create two task and poll for button press in one task and toggle led in another task.
-   But LED task should not run unneccessarily, it should only run when button is pressed.*/
+   But LED task should not run unneccessarily, it should only run when button is pressed.
+   So, button task will keep on running max time.
+   And also make one more task which will number of times button is pressed. 
+*/
 
 
 /* USER CODE BEGIN Header */
@@ -56,6 +59,7 @@ UART_HandleTypeDef huart2;
 //static uint8_t button_pressed;
 TaskHandle_t task1_handler_address;
 TaskHandle_t task2_handler_address;
+TaskHandle_t task3_handler_address;
 
 /* USER CODE END PV */
 
@@ -66,6 +70,7 @@ static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 static void button_task_handler(void *);
 static void led_task_handler(void *);
+static void print_task_handler(void *);
 static void rtos_delay(uint32_t ms_delay);
 /* USER CODE END PFP */
 
@@ -112,6 +117,9 @@ int main(void)
   configASSERT(ret == pdPASS);  
 
   ret = xTaskCreate(led_task_handler, "LED TASK", 500, "LED TASK running\n\n", 2, &task2_handler_address);
+  configASSERT(ret == pdPASS);
+
+  ret = xTaskCreate(print_task_handler, "PRINT TASK", 500, "PRINT TASK running\n\n", 2, &task3_handler_address);
   configASSERT(ret == pdPASS);
 
   //Start the Schedular
@@ -264,9 +272,14 @@ static void button_task_handler(void * parameter)
       {
           //BUTTON PRESSED
 
-          //DELAY TO AVOID BUTTON DEBOUNCING
+          //DELAY TO AVOID BUTTON DEBOUNCING, THEREFORE AVOIDING MULTIPLE NOTIFICATIONS
           rtos_delay(100);
+
+          //NOTIFY LED TASK TO TOGGLE LED
           xTaskNotify(task2_handler_address, 0x0, eNoAction);
+
+          //NOTIFY PRINT TASK TO PRINT NUMBER OF TIMES BUTTON PRESSED
+          xTaskNotify(task3_handler_address, 0x0, eIncrement);
       }
     }
 }
@@ -291,9 +304,35 @@ static void led_task_handler(void * parameter)
     }
 }
 
+static void print_task_handler(void * parameter)
+{
+  while(1)
+  {
+      uint32_t current_notif_value = 0;
+      uint8_t message[23] = "Button press count: \n";
+
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      HAL_Delay(1000);
+
+      //BY DEFAULT VALUE OF NOTIF COUNT IS 0, THEREFORE CURRENT_NOTIF_VALUE WILL GIVE NUMBER OF BUTTON PRESS 
+      if(xTaskNotifyWait(0, 0, &current_notif_value, portMAX_DELAY ) == pdTRUE)
+      {
+
+        message[22] =  (uint8_t)current_notif_value;
+        USART_Send(message, 23);
+        USART_Send(message[22], 4);
+        //USART_Send("\n", 1);
+      }
+  }
+}
 
 void USART_Send(uint8_t * data, uint8_t size)
 {
+    HAL_UART_AbortTransmit(&huart2);
     if(HAL_UART_Transmit(&huart2, data, size, 100))
     {
       Error_Handler();
