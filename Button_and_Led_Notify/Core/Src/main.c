@@ -54,6 +54,8 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 
 //static uint8_t button_pressed;
+TaskHandle_t task1_handler_address;
+TaskHandle_t task2_handler_address;
 
 /* USER CODE END PV */
 
@@ -80,8 +82,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   
-  TaskHandle_t task1_handler_address;
-  TaskHandle_t task2_handler_address;
   BaseType_t ret;
 
   /* USER CODE END 1 */
@@ -266,7 +266,7 @@ static void button_task_handler(void * parameter)
 
           //DELAY TO AVOID BUTTON DEBOUNCING
           rtos_delay(100);
-          xTaskNotify(led_task_handler, 0, eNoAction);
+          xTaskNotify(task2_handler_address, 0x0, eNoAction);
       }
     }
 }
