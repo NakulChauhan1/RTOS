@@ -1,0 +1,11 @@
+main.c:86:5:main	32	static,ignoring_inline_asm
+main.c:150:6:SystemClock_Config	88	static
+main.c:196:13:MX_USART2_UART_Init	8	static
+main.c:229:13:MX_GPIO_Init	40	static
+main.c:262:13:button_task_handler	24	static
+main.c:291:13:led_task_handler	24	static
+main.c:311:13:print_task_handler	32	static
+main.c:337:6:USART_Send	16	static
+main.c:347:13:rtos_delay	24	static
+main.c:366:6:HAL_TIM_PeriodElapsedCallback	16	static
+main.c:383:6:Error_Handler	4	static,ignoring_inline_asm

@@ -313,7 +313,7 @@ static void print_task_handler(void * parameter)
   while(1)
   {
       uint32_t current_notif_value = 0;
-      uint8_t message[23] = "Button press count: \n";
+      //uint8_t message[23] = "Button press count: \n";
 
       HAL_UART_AbortTransmit(&huart2);
       if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
@@ -326,9 +326,9 @@ static void print_task_handler(void * parameter)
       if(xTaskNotifyWait(0, 0, &current_notif_value, portMAX_DELAY ) == pdTRUE)
       {
 
-        message[22] =  (uint8_t)current_notif_value;
-        USART_Send(message, 23);
-        USART_Send(message[22], 4);
+        //message[22] =  (uint8_t)current_notif_value;
+        //USART_Send(message, 23);
+        //USART_Send(message[22], 4);
         //USART_Send("\n", 1);
       }
   }

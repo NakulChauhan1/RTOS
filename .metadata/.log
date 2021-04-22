@@ -489,3 +489,9 @@ Project's 'Button_and_LED _Notify' active one is 'Button_and_LED _Notify.ioc' fi
 
 !ENTRY org.eclipse.cdt.core 1 0 2021-04-23 00:50:19.317
 !MESSAGE Indexed 'LED_Button_ISR' (23 sources, 92 headers) in 1.77 sec: 6,295 declarations; 36,444 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0047%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-23 01:01:14.256
+!MESSAGE Indexed 'LED_Button_ISR' (23 sources, 92 headers) in 1.55 sec: 6,295 declarations; 36,444 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0047%)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2021-04-23 01:09:17.365
+!MESSAGE Won't launch debug session since we failed to locate the binary.
