@@ -480,3 +480,6 @@ Project's 'Button_and_LED _Notify' active one is 'Button_and_LED _Notify.ioc' fi
 !MESSAGE Save operation warnings.
 !SUBENTRY 1 org.eclipse.core.resources 2 234 2021-04-22 12:30:05.939
 !MESSAGE The project description file (.project) for 'Button_and_LED _Notify' was missing.  This file contains important information about the project.  A new project description file has been created, but some information about the project may have been lost.
+
+!ENTRY org.eclipse.cdt.core 1 0 2021-04-22 23:56:06.539
+!MESSAGE Indexed 'LED_Button_ISR' (21 sources, 80 headers) in 4.94 sec: 4,484 declarations; 21,609 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0077%)
