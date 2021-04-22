@@ -1,3 +1,10 @@
+/* 
+  Create task's that toggles led and when user presses the button, the button interrupt handler must run,
+  and it should send notificaion to the current LED toggling task, and when LED toggling task receives the
+  notficaion, it should delete itself.
+*/
+
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -23,6 +30,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "stdint.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,16 +52,26 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+
+//static uint8_t button_pressed;
+TaskHandle_t task1_handler_address;
+TaskHandle_t task2_handler_address;
+TaskHandle_t task3_handler_address;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void button_task_handler(void *);
+static void led_task_handler(void *);
+static void print_task_handler(void *);
+static void rtos_delay(uint32_t ms_delay);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -64,6 +86,8 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+  BaseType_t ret;
 
   /* USER CODE END 1 */
 
@@ -85,7 +109,26 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_USART2_UART_Init();
+
   /* USER CODE BEGIN 2 */
+
+  ret = xTaskCreate(button_task_handler, "BUTTON TASK", 500, "BUTTON TASK running\n\n", 2, &task1_handler_address);
+  configASSERT(ret == pdPASS);  
+
+  ret = xTaskCreate(led_task_handler, "LED TASK", 500, "LED TASK running\n\n", 2, &task2_handler_address);
+  configASSERT(ret == pdPASS);
+
+  ret = xTaskCreate(print_task_handler, "PRINT TASK", 500, "PRINT TASK running\n\n", 2, &task3_handler_address);
+  configASSERT(ret == pdPASS);
+
+  //Start the Schedular
+  vTaskStartScheduler();
+
+
+  //Note: Control never comes out of this function ie Schedular untill unless schedular launch is failed
+
+  
 
   /* USER CODE END 2 */
 
@@ -146,6 +189,39 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -168,14 +244,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : USART_TX_Pin USART_RX_Pin */
-  GPIO_InitStruct.Pin = USART_TX_Pin|USART_RX_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -190,6 +258,100 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+static void button_task_handler(void * parameter)
+{
+
+    while(1)
+    {
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      HAL_Delay(1000);
+
+      //BY DEFAULT BUTTON PIN IS CONNECTED TO HIGH
+      if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin))
+      {
+          //BUTTON PRESSED
+
+          //DELAY TO AVOID BUTTON DEBOUNCING, THEREFORE AVOIDING MULTIPLE NOTIFICATIONS
+          rtos_delay(100);
+
+          //NOTIFY LED TASK TO TOGGLE LED
+          xTaskNotify(task2_handler_address, 0x0, eNoAction);
+
+          //NOTIFY PRINT TASK TO PRINT NUMBER OF TIMES BUTTON PRESSED
+          xTaskNotify(task3_handler_address, 0x0, eIncrement);
+      }
+    }
+}
+
+static void led_task_handler(void * parameter)
+{
+    while(1)
+    {
+      //wait untill notification event is not received from button task
+      if (xTaskNotifyWait( 0, 0, NULL, portMAX_DELAY ) == pdTRUE)
+      {
+          //NOTIFICATION IS RECEIVED
+          HAL_UART_AbortTransmit(&huart2);
+          if (HAL_UART_Transmit(&huart2, "Notication received\n", 20, 100) != HAL_OK)
+          {
+            Error_Handler();
+          }
+          HAL_Delay(1000);
+
+          HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      }
+    }
+}
+
+static void print_task_handler(void * parameter)
+{
+  while(1)
+  {
+      uint32_t current_notif_value = 0;
+      uint8_t message[23] = "Button press count: \n";
+
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      HAL_Delay(1000);
+
+      //BY DEFAULT VALUE OF NOTIF COUNT IS 0, THEREFORE CURRENT_NOTIF_VALUE WILL GIVE NUMBER OF BUTTON PRESS 
+      if(xTaskNotifyWait(0, 0, &current_notif_value, portMAX_DELAY ) == pdTRUE)
+      {
+
+        message[22] =  (uint8_t)current_notif_value;
+        USART_Send(message, 23);
+        USART_Send(message[22], 4);
+        //USART_Send("\n", 1);
+      }
+  }
+}
+
+void USART_Send(uint8_t * data, uint8_t size)
+{
+    HAL_UART_AbortTransmit(&huart2);
+    if(HAL_UART_Transmit(&huart2, data, size, 100))
+    {
+      Error_Handler();
+    }
+}
+
+
+static void rtos_delay(uint32_t ms_delay)
+{
+  uint32_t current_tick_count = xTaskGetTickCount();
+  uint32_t tick_count_after_delay = current_tick_count + (ms_delay * configTICK_RATE_HZ)/1000;
+
+  while(xTaskGetTickCount() != tick_count_after_delay);
+
+}
 
 /* USER CODE END 4 */
 
