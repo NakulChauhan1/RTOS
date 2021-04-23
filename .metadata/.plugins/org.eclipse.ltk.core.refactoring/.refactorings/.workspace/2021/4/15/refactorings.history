@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;First_Project_&apos;" deleteContents="false" description="Delete resource &apos;First_Project_&apos;" element1="/First_Project_" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1617646156836"/>&#x0A;<refactoring comment="Delete resource &apos;First_RTOS_Project_/Core/Src/sysmem.c&apos;" deleteContents="false" description="Delete resource &apos;First_RTOS_Project_/Core/Src/sysmem.c&apos;" element1="/First_RTOS_Project_/Core/Src/sysmem.c" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1617646600009"/>
-</session>
