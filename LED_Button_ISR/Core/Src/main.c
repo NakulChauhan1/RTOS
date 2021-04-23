@@ -31,6 +31,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "stdint.h"
+#include <string.h>
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -71,6 +72,7 @@ static void MX_USART2_UART_Init(void);
 static void button_task_handler(void *);
 static void led_task_handler(void *);
 static void print_task_handler(void *);
+void button_handler();
 static void rtos_delay(uint32_t ms_delay);
 /* USER CODE END PFP */
 
@@ -113,14 +115,14 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
-  ret = xTaskCreate(button_task_handler, "BUTTON TASK", 500, "BUTTON TASK running\n\n", 2, &task1_handler_address);
-  configASSERT(ret == pdPASS);  
+  //ret = xTaskCreate(button_task_handler, "BUTTON TASK", 500, "BUTTON TASK running\n\n", 2, &task1_handler_address);
+  //configASSERT(ret == pdPASS);  
 
   ret = xTaskCreate(led_task_handler, "LED TASK", 500, "LED TASK running\n\n", 2, &task2_handler_address);
   configASSERT(ret == pdPASS);
 
-  ret = xTaskCreate(print_task_handler, "PRINT TASK", 500, "PRINT TASK running\n\n", 2, &task3_handler_address);
-  configASSERT(ret == pdPASS);
+  //ret = xTaskCreate(print_task_handler, "PRINT TASK", 500, "PRINT TASK running\n\n", 2, &task3_handler_address);
+  //configASSERT(ret == pdPASS);
 
   //Start the Schedular
   vTaskStartScheduler();
@@ -259,7 +261,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-static void button_task_handler(void * parameter)
+/*static void button_task_handler(void * parameter)
 {
 
     while(1)
@@ -286,29 +288,38 @@ static void button_task_handler(void * parameter)
           xTaskNotify(task3_handler_address, 0x0, eIncrement);
       }
     }
-}
+}*/
 
 static void led_task_handler(void * parameter)
 {
     while(1)
     {
-      //wait untill notification event is not received from button task
-      if (xTaskNotifyWait( 0, 0, NULL, portMAX_DELAY ) == pdTRUE)
+      HAL_UART_AbortTransmit(&huart2);
+      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, strlen(parameter), 100) != HAL_OK)
       {
-          //NOTIFICATION IS RECEIVED
-          HAL_UART_AbortTransmit(&huart2);
-          if (HAL_UART_Transmit(&huart2, "Notication received\n", 20, 100) != HAL_OK)
-          {
-            Error_Handler();
-          }
-          HAL_Delay(1000);
+        Error_Handler();
+      }
 
-          HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      //HAL_Delay(1000);
+
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+      //wait untill notification event is not received from button ISR
+      if (xTaskNotifyWait( 0, 0, NULL, pdMS_TO_TICKS(500) ) == pdTRUE)
+      {
+
+        HAL_UART_AbortTransmit(&huart2);
+        if (HAL_UART_Transmit(&huart2, "NOTIFICATION RECEIVED, DELETING LED TASK\n", 42, 100) != HAL_OK)
+        {
+          Error_Handler();
+        }
+          //NOTIFICATION IS RECEIVED
+          vTaskDelete(NULL);
       }
     }
 }
 
-static void print_task_handler(void * parameter)
+/*static void print_task_handler(void * parameter)
 {
   while(1)
   {
@@ -332,6 +343,12 @@ static void print_task_handler(void * parameter)
         //USART_Send("\n", 1);
       }
   }
+}*/
+
+void button_handler()
+{
+  //NOTIFY LED TASK WHICH IS TOGGLING LED, AND THEREFORE DELETE THE LED TASK
+  xTaskNotifyFromISR(task2_handler_address, 0, eNoAction, NULL);
 }
 
 void USART_Send(uint8_t * data, uint8_t size)
@@ -343,6 +360,18 @@ void USART_Send(uint8_t * data, uint8_t size)
     }
 }
 
+
+/**
+  * @brief  
+  * @note   This function is called  when GPIO interrupt took place, inside
+  * HAL_GPIO_EXTI_IRQHandler().
+  * @retval None
+  */
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  button_handler();
+}
 
 static void rtos_delay(uint32_t ms_delay)
 {
