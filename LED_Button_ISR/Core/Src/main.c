@@ -347,8 +347,19 @@ static void led_task_handler(void * parameter)
 
 void button_handler()
 {
+
+  BaseType_t pxHigherPriorityTaskWoken = pdFALSE;
+
   //NOTIFY LED TASK WHICH IS TOGGLING LED, AND THEREFORE DELETE THE LED TASK
-  xTaskNotifyFromISR(task2_handler_address, 0, eNoAction, NULL);
+  xTaskNotifyFromISR(task2_handler_address, 0, eNoAction, &pxHigherPriorityTaskWoken);
+  /*Note: if sending notification wakes up any higher priority task,
+          then pxHigherPriorityTaskWoken changes this field to pdTRUE. */
+
+  portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
+
+  /*BY THIS MACRO WE HAVE FORCED SCHEDULER TO RUN AFTER ISR EXITS, 
+   AND HIGHER PRIORITY TASK WILL COME INTO CPU IF NOTIFY FROMISR()
+   API UNLBOCKS SOME HIGHER PRIORITY TASK */
 }
 
 void USART_Send(uint8_t * data, uint8_t size)
