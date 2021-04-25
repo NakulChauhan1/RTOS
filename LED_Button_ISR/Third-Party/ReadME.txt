@@ -1,1 +1,0 @@
-This folder contains third party codes, like Graphics Library, Low power IP stack or USB stack or whatever code we take from third party/
