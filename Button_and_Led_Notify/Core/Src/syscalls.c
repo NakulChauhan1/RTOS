@@ -33,6 +33,7 @@
 
 #include "main.h"
 
+
 /* Variables */
 //#undef errno
 extern int errno;
@@ -83,10 +84,7 @@ __attribute__((weak)) int _write(int file, char *ptr, int len)
 {
 	int DataIdx;
 
-	for (DataIdx = 0; DataIdx < len; DataIdx++)
-	{
-		USART_Send(ptr, len);
-	}
+	USART_Send(ptr, len);
 	return len;
 }
 

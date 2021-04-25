@@ -62,7 +62,8 @@ static void task2_handler();
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+TaskHandle_t task1_handler_address;
+TaskHandle_t task2_handler_address;
 /* USER CODE END 0 */
 
 /**
@@ -72,9 +73,6 @@ static void task2_handler();
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  
-  TaskHandle_t task1_handler_address;
-  TaskHandle_t task2_handler_address;
   BaseType_t ret;
 
   /* USER CODE END 1 */
@@ -264,13 +262,8 @@ static void task1_handler(void * parameter)
 
     while(1)
     {
-      HAL_UART_AbortTransmit(&huart2);
-      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 16, 100) != HAL_OK)
-      {
-        Error_Handler();
-      }
-      HAL_Delay(100);
-      vTaskDelay(pdMS_TO_TICKS(2000));
+      printf("%s\n", parameter);
+      vTaskDelay(pdMS_TO_TICKS(1000));
       //taskYIELD(); 
     }
 }
@@ -279,12 +272,7 @@ static void task2_handler(void * parameter)
 {
     while(1)
     {
-      HAL_UART_AbortTransmit(&huart2);
-      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 16, 100) != HAL_OK)
-      {
-        Error_Handler();
-      }
-      HAL_Delay(100);
+      printf("%s\n", parameter);
       vTaskDelay(pdMS_TO_TICKS(1000));
       //taskYIELD();
     }

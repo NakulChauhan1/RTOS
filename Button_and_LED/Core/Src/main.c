@@ -251,11 +251,7 @@ static void button_task_handler(void * parameter)
 
     while(1)
     {
-      HAL_UART_AbortTransmit(&huart2);
-      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
-      {
-        Error_Handler();
-      }
+      printf("%s\n", parameter);
       HAL_Delay(1000);
 
       //BY DEFAULT BUTTON PIN IS CONNECTED TO HIGH
@@ -268,11 +264,7 @@ static void led_task_handler(void * parameter)
 {
     while(1)
     {
-      HAL_UART_AbortTransmit(&huart2);
-      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 19, 100) != HAL_OK)
-      {
-        Error_Handler();
-      }
+      printf("%s\n", parameter);
       HAL_Delay(1000);
 
       if (button_pressed)

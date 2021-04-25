@@ -260,12 +260,9 @@ static void button_task_handler(void * parameter)
 
     while(1)
     {
-      HAL_UART_AbortTransmit(&huart2);
-      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
-      {
-        Error_Handler();
-      }
-      HAL_Delay(1000);
+      taskENTER_CRITICAL();
+      printf("%s\n", parameter);
+      taskEXIT_CRITICAL();
 
       //BY DEFAULT BUTTON PIN IS CONNECTED TO HIGH
       if (!HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin))
@@ -281,6 +278,7 @@ static void button_task_handler(void * parameter)
           //NOTIFY PRINT TASK TO PRINT NUMBER OF TIMES BUTTON PRESSED
           xTaskNotify(task3_handler_address, 0x0, eIncrement);
       }
+      HAL_Delay(2000);
     }
 }
 
@@ -288,19 +286,22 @@ static void led_task_handler(void * parameter)
 {
     while(1)
     {
+
+      taskENTER_CRITICAL();
+      printf("%s\n", parameter);
+      taskEXIT_CRITICAL();
+
       //wait untill notification event is not received from button task
       if (xTaskNotifyWait( 0, 0, NULL, portMAX_DELAY ) == pdTRUE)
       {
           //NOTIFICATION IS RECEIVED
-          HAL_UART_AbortTransmit(&huart2);
-          if (HAL_UART_Transmit(&huart2, "Notication received\n", 20, 100) != HAL_OK)
-          {
-            Error_Handler();
-          }
-          HAL_Delay(1000);
+          taskENTER_CRITICAL();
+          printf("Notication received\n");
+          taskEXIT_CRITICAL();
 
           HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
       }
+      HAL_Delay(2000);
     }
 }
 
@@ -309,24 +310,19 @@ static void print_task_handler(void * parameter)
   while(1)
   {
       uint32_t current_notif_value = 0;
-      uint8_t message[23] = "Button press count: \n";
 
-      HAL_UART_AbortTransmit(&huart2);
-      if (HAL_UART_Transmit(&huart2, (uint8_t *)parameter, 21, 100) != HAL_OK)
-      {
-        Error_Handler();
-      }
-      HAL_Delay(1000);
+      taskENTER_CRITICAL();
+      printf("%s\n", parameter);
+      taskEXIT_CRITICAL();
 
       //BY DEFAULT VALUE OF NOTIF COUNT IS 0, THEREFORE CURRENT_NOTIF_VALUE WILL GIVE NUMBER OF BUTTON PRESS 
       if(xTaskNotifyWait(0, 0, &current_notif_value, portMAX_DELAY ) == pdTRUE)
       {
-
-        message[22] =  (uint8_t)current_notif_value;
-        USART_Send(message, 23);
-        USART_Send(message[22], 4);
-        //USART_Send("\n", 1);
+        taskENTER_CRITICAL();
+        printf("Button press count: %d\n", current_notif_value);
+        taskEXIT_CRITICAL();
       }
+      HAL_Delay(2000);
   }
 }
 
